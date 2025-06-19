@@ -1,18 +1,18 @@
 import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema({
-  Email:{
+const userSchema = mongoose.Schema({
+  email:{
     type: String,
     required: true,
     unique: true,
   },
 
-  First_Name:{
+  firstName:{
     type: String,
     required: true,
   },
 
-  Last_Name:{
+  lastName:{
     type: String,
     required: true,
   },
@@ -27,13 +27,16 @@ const userSchema = new mongoose.Schema({
     default: false,
   },
 
-  Type:{
+  type:{
     type: String,
-    enum: ["Admin", "User", "Owner"],
-    default: "User",
-  }
+    default: "customer",
+  },
+
+  profilePicture:{
+    type: String,
+    default: "https://www.freepik.com/free-photos-vectors/default-user",}
 });
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model("Users", userSchema);
 
 export default User;
