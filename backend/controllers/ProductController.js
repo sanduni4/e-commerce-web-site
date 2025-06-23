@@ -2,9 +2,19 @@ import Product from '../model/Product.js';
 
 export function getProducts(req,res)
 {
+        console.log(req.user);
+
+        if(req.user==null){
+        res.json({
+            message:"you are not logged in"
+        })
+        return;
+    }
+
+
     Product.find().then(
         (productList)=>{
-            res.satus(200).json({
+            res.status(200).json({
                 list: productList
             })
         }
@@ -19,6 +29,24 @@ export function getProducts(req,res)
 }
 
 export function createProduct(req, res){
+
+    console.log(req.user);
+
+    if(req.user==null){
+        res.json({
+            message:"you are not logged in"
+        })
+        return;
+    }
+
+    if(req.user.type !== "Admin"){
+        res.json({
+            message:"you are not admin"
+        })
+        return;
+    }
+
+    
     const product = new Product(req.body)
     product.save().then(()=>{
         res.json({
