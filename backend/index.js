@@ -4,9 +4,11 @@ import mongoose from "mongoose";
 import UsersRouter from "./router/UserRouter.js";
 import ProductRouter from "./router/ProductRouter.js";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
-const mongoURL = "mongodb+srv://sandu:sandu@cluster0.pwd8stl.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+const mongoURL = process.env.MONGO_DB_URI;
 
 
 mongoose.connect(mongoURL,{})
