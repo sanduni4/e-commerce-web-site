@@ -9,9 +9,23 @@ export function createUser(req,res)
 {
     const newUserData = req.body;
 
-    if (!newUserData.Password) {
-    return res.status(400).json({ message: "Password is required" });
-  }
+    if(newUserData.type == "admin"){
+
+        if(req.user== null){
+        res.json({
+            message:"please login as admin to create admin account",
+        })
+        return;
+    }
+
+    if (req.user.type !== "admin") {
+        res.json({
+            message:"please login as admin to create admin account",
+        })
+        return;
+    }
+    }
+
 
     
     newUserData.Password = bcrypt.hashSync(newUserData.Password, 10)
@@ -74,4 +88,24 @@ export function loginUser(req, res){
     )
 
 }
-    
+
+export function IsAdmin(req)
+{
+    if(req.user ==null){
+        return false;
+    }
+    if(req.user.type != "admin"){
+        return false;
+    }
+    return true;
+}    
+
+export function IsCoustomer(req){
+    if(req.user == null){
+        return false;
+    }
+    if(req.user.type == "admin"){
+        return false;
+    }
+    return true; 
+}
