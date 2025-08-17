@@ -2,6 +2,7 @@ import bodyParser from "body-parser";
 import express from "express";
 import mongoose from "mongoose";
 import UsersRouter from "./router/UserRouter.js";
+import productRouter from "./router/productRouter.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
@@ -44,6 +45,7 @@ app.use(
     });
 
 app.use("/api/Users", UsersRouter);
+app.use("/api/products", productRouter);
 
 
 app.listen(
