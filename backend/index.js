@@ -3,6 +3,7 @@ import express from "express";
 import mongoose from "mongoose";
 import UsersRouter from "./router/UserRouter.js";
 import productRouter from "./router/productRouter.js";
+import orderRouter from "./router/orderRouter.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
@@ -20,7 +21,7 @@ connection.once("open", ()=>{
     console.log("MongoDB connection established successfully");
 })
 
-
+app.use(express.json());
 app.use(bodyParser.json());
 
 app.use(
@@ -46,7 +47,7 @@ app.use(
 
 app.use("/api/Users", UsersRouter);
 app.use("/api/products", productRouter);
-
+app.use("/api/orders", orderRouter);
 
 app.listen(
     

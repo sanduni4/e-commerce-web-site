@@ -34,35 +34,36 @@ const orderSchema = mongoose.Schema({
             }
               }
     ],
-            date : {
+
+    date : {
                 type: Date,
                 default: Date.now
             },
             
-            paymentId : {
+    paymentId : {
                 type: String,
             },
 
-            status : {
+    status : {
                 type: String,
                 default: "pending"
             },
 
-            notes : {
+    notes : {
                type:String
             },
            
-            name :{
+    name :{
                type: String,
                required: true
             },
 
-            address: {
+    address: {
                type : String,
                required: true
             },
 
-            phoneNumber: {
+    phoneNumber: {
               type: Number,
               require:true
             }
