@@ -22,10 +22,10 @@ export function addToCart(req, res) {
         }
 
         const cart = userCarts.get(userEmail);
-        
+
         // Check if item already exists in cart
         const existingItemIndex = cart.findIndex(item => item.productId === productId);
-        
+
         if (existingItemIndex > -1) {
             // Update quantity if item exists
             cart[existingItemIndex].quantity += parseInt(quantity);
@@ -57,7 +57,7 @@ export function getCart(req, res) {
     try {
         const userEmail = req.user ? req.user.email : 'guest';
         const cart = userCarts.get(userEmail) || [];
-        
+
         const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
         const totalPrice = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
 
