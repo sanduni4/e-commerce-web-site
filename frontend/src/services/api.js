@@ -25,7 +25,10 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
-      window.location.href = '/login';
+      // Only redirect if not already on login page
+      if (window.location.pathname !== '/login') {
+        window.location.href = '/login';
+      }
     }
     return Promise.reject(error);
   }
@@ -34,14 +37,41 @@ api.interceptors.response.use(
 // Auth API calls
 export const authAPI = {
   login: async (credentials) => {
+    console.log('API: Sending login request with:', credentials);
     const response = await api.post('/users/login', credentials);
+    console.log('API: Login response:', response.data);
     return response.data;
   },
   
   register: async (userData) => {
-    const response = await api.post('/users', userData);
+    const response = await api.post('/users/register', userData);
     return response.data;
   },
+
+  getUserProfile: async () => {
+    const response = await api.get('/users/profile');
+    return response.data;
+  },
+
+  updateProfile: async (userData) => {
+    const response = await api.put('/users/profile', userData);
+    return response.data;
+  },
+
+  getAllUsers: async () => {
+    const response = await api.get('/users');
+    return response.data;
+  },
+
+  toggleUserBlock: async (userId, isBlocked) => {
+    const response = await api.put(`/users/${userId}/toggle-block`, { isBlocked });
+    return response.data;
+  },
+
+  createAdminUser: async (userData) => {
+    const response = await api.post('/users/admin', { ...userData, type: 'admin' });
+    return response.data;
+  }
 };
 
 // Products API calls
@@ -60,6 +90,16 @@ export const productsAPI = {
     const response = await api.post('/products', productData);
     return response.data;
   },
+
+  updateProduct: async (id, productData) => {
+    const response = await api.put(`/products/${id}`, productData);
+    return response.data;
+  },
+
+  deleteProduct: async (id) => {
+    const response = await api.delete(`/products/${id}`);
+    return response.data;
+  }
 };
 
 // Cart API calls
@@ -101,6 +141,11 @@ export const ordersAPI = {
     const response = await api.get('/orders/user');
     return response.data;
   },
+
+  getAllOrders: async () => {
+    const response = await api.get('/orders');
+    return response.data;
+  }
 };
 
 export default api;

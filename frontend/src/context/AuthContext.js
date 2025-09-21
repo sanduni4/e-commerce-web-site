@@ -17,40 +17,63 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState('');
 
   useEffect(() => {
+    checkAuthState();
+  }, []);
+
+  const checkAuthState = () => {
     const token = localStorage.getItem('token');
     if (token) {
-      // Decode token to get user info (simplified)
       try {
+        // Decode token to get user info
         const payload = JSON.parse(atob(token.split('.')[1]));
-        setUser(payload);
+        
+        // Check if token is expired
+        if (payload.exp && payload.exp < Date.now() / 1000) {
+          localStorage.removeItem('token');
+          setUser(null);
+        } else {
+          setUser(payload);
+        }
       } catch (error) {
+        console.error('Invalid token:', error);
         localStorage.removeItem('token');
+        setUser(null);
       }
     }
     setLoading(false);
-  }, []);
+  };
 
   const login = async (credentials) => {
     try {
       setError('');
       setLoading(true);
       
+      console.log('Attempting login with:', credentials);
+      
       const response = await authAPI.login(credentials);
+      console.log('Login response:', response);
       
       if (response.token) {
         localStorage.setItem('token', response.token);
         
         // Decode token to get user info
         const payload = JSON.parse(atob(response.token.split('.')[1]));
+        console.log('Decoded token payload:', payload);
+        
         setUser(payload);
         
-        return { success: true, message: response.message };
+        return { 
+          success: true, 
+          message: response.message,
+          user: payload
+        };
       } else {
         setError(response.message || 'Login failed');
         return { success: false, message: response.message };
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || 'Login failed';
+      console.error('Login error:', error);
+      const errorMessage = error.response?.data?.message || 'Login failed. Please try again.';
       setError(errorMessage);
       return { success: false, message: errorMessage };
     } finally {
@@ -77,6 +100,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     localStorage.removeItem('token');
     setUser(null);
+    setError('');
   };
 
   const value = {
@@ -88,6 +112,8 @@ export const AuthProvider = ({ children }) => {
     error,
     isAuthenticated: !!user,
     isAdmin: user?.type === 'admin',
+    isCustomer: user?.type === 'customer',
+    setError,
   };
 
   return (

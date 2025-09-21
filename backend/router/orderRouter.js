@@ -4,10 +4,10 @@ import { createOrder, getUserOrders, getAllOrders } from "../controllers/orderCo
 const orderRouter = express.Router();
 
 // POST create new order (customer only)
-orderRouter.post("/", createOrder);
+orderRouter.post("/:id", createOrder);
 
 // GET user's orders (customer only)
-orderRouter.get("/user", getUserOrders);
+orderRouter.get("/user/", getUserOrders);
 
 // GET all orders (admin only)
 orderRouter.get("/", getAllOrders);

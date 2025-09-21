@@ -1,9 +1,9 @@
 import Order from "../model/Order.js"; 
-import { IsCoustomer } from "./UserController.js";
+import { IsCustomer } from "./UserController.js";
 
 export async function createOrder(req, res) {
     // Fix: Call the function with (req) parameter
-    if (!IsCoustomer(req)) {
+    if (!IsCustomer(req)) {
         return res.status(401).json({
             message: "Please login as customer to create an order"
         });
